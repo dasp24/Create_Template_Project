@@ -1,5 +1,5 @@
 const fs = require('fs');
-const {child} = require('child_process');
+const { child } = require('child_process');
 
 // process.argv - this means i can use args in node, such as file path
 
@@ -36,14 +36,18 @@ const name = args[3];
 
 // it will be called with node in comand line
 function createProject(destination, projectName) {
-    fs.mkdir(destination + projectName, callBack(null, 'making stuff'));
-    fs.writeFile(destination + './' + projectName + '/index.js', '', callBack(null, 'making stuff'));
-    fs.writeFile(destination + './' + projectName + '/package.json', json, callBack(null, 'making stuff'));
-    fs.mkdir(destination + './' + projectName + '/spec', callBack(null, 'making stuff'));
-    fs.writeFile(destination + './' + projectName + '/spec/index.spec.js', "const {expect} = require('chai')", callBack(null, 'making stuff'));
-}
+    fs.mkdir(destination + projectName, function (err, data) {
+        fs.writeFile(destination + './' + projectName + '/index.js', '', function (err, data) {
+            fs.writeFile(destination + './' + projectName + '/package.json', json, function (err, data) {
+                fs.mkdir(destination + './' + projectName + '/spec', function (err, data) {
+                    fs.writeFile(destination + './' + projectName + '/spec/index.spec.js', "const {expect} = require('chai')", callBack);
+                });
+            });
+        });
+    }
 
-createProject(path, name)
+
+createProject(path, name);
 
 
-
+});
