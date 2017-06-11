@@ -1,5 +1,6 @@
 const fs = require('fs');
-const { child } = require('child_process');
+const { exec } = require('child_process');
+
 
 // process.argv - this means i can use args in node, such as file path
 
@@ -23,31 +24,35 @@ const json = JSON.stringify({
 });
 
 const callBack = function (err, data) {
-    if (err) console.log('nah mate');
+    if (err) console.log(err);
     else console.log(data);
 };
 const args = process.argv;
 const path = args[2];
-const name = args[3];
+
 
 // this function creates my project
 
 // it needs a argument to tell it where to put the file
 
 // it will be called with node in comand line
-function createProject(destination, projectName) {
-    fs.mkdir(destination + projectName, function (err, data) {
-        fs.writeFile(destination + './' + projectName + '/index.js', '', function (err, data) {
-            fs.writeFile(destination + './' + projectName + '/package.json', json, function (err, data) {
-                fs.mkdir(destination + './' + projectName + '/spec', function (err, data) {
-                    fs.writeFile(destination + './' + projectName + '/spec/index.spec.js', "const {expect} = require('chai')", callBack);
+function createProject(destination) {
+    fs.mkdir(destination, function (err, data) {
+        fs.writeFile(destination + '/index.js', '', function (err, data) {
+            fs.writeFile(destination + '/package.json', json, function (err, data) {
+                fs.mkdir(destination + '/spec', function (err, data) {
+                    fs.writeFile(destination + '/spec/index.spec.js', "const {expect} = require('chai')", function (err) {
+                        // CD into destination
+                        // run npm
+                        // exec('');
+                        exec('cd ' + destination + '; npm i');
+                    });
                 });
             });
         });
-    }
+    });
+};
+
+createProject(path);
 
 
-createProject(path, name);
-
-
-});

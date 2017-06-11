@@ -1,1 +1,0 @@
-{"name":"new_project","version":"1.0.0","description":"","main":"index.js","scripts":{"test":"mocha ./spec"},"devDependencies":{"chai":"^1.8.1","eslint":"^3.19.0"},"keywords":[],"author":"","license":"ISC"}
