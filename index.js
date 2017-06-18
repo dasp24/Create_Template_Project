@@ -39,19 +39,21 @@ const path = args[2];
 function createProject(destination) {
     fs.mkdir(destination, function (err, data) {
         fs.writeFile(destination + '/index.js', '', function (err, data) {
-            fs.writeFile(destination + '/package.json', json, function (err, data) {
-                fs.mkdir(destination + '/spec', function (err, data) {
-                    fs.writeFile(destination + '/spec/index.spec.js', "const {expect} = require('chai')", function (err) {
-                        // CD into destination
-                        // run npm
-                        // exec('');
-                        exec('cd ' + destination + '; npm i');
+            fs.writeFile(destination + '.gitignore', 'node_modules', function (err, data) {
+                fs.writeFile(destination + '/package.json', json, function (err, data) {
+                    fs.mkdir(destination + '/spec', function (err, data) {
+                        fs.writeFile(destination + '/spec/index.spec.js', "const {expect} = require('chai')", function (err) {
+                            // CD into destination
+                            // run npm
+                            // exec('');
+                            exec('cd ' + destination + '; npm i');
+                        })
                     });
                 });
             });
         });
     });
-};
+}
 
 createProject(path);
 
