@@ -22,6 +22,8 @@ const specImports = (destination) => `const { expect } = require("chai");\nconst
 
 const mainImports = (destination) => `const ${destination} = () => {}\nmodule.exports = { ${destination} };`;
 
+const forGitIgnore = () => '.node_modules\n**/node_modules\n.DS_Store\n**/.DS_Store\n*.log\n**/*.log\n.vscode\n**/.vscode\n.idea/*\n**/.idea/*\n**/bundle.js\n**/bundle.js.map\n**/*.map.css\n**/*.map.js';
+
 // it will be called with node in comand line
 const path = process.argv[2];
 const array = process.argv[2].split('/');
@@ -30,7 +32,7 @@ function createProject(destination, destinationName) {
     fs.mkdir(destination,  (err, data) => {
         fs.writeFile(destination + `/${destinationName}.js`, mainImports(destinationName),  (err, data) => {
             fs.writeFile(destination + '/package.json', json,  (err, data) => {
-                fs.writeFile(destination + '/.gitignore', 'node_modules',  (err, data) => {
+                fs.writeFile(destination + '/.gitignore', forGitIgnore(),  (err, data) => {
                     fs.mkdir(destination + '/spec',  (err, data) => {
                         fs.writeFile(destination + `/spec/${destinationName}.spec.js`, specImports(destinationName), () => {
                             exec('cd ' + destination + '; npm i');
