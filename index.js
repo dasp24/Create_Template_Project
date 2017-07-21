@@ -1,12 +1,5 @@
 const fs = require('fs');
-const {
-    exec
-} = require('child_process');
-
-
-// process.argv - this means i can use args in node, such as file path
-
-// child_process - possibly use to call npm install within my function
+const {exec} = require('child_process');
 
 const json = JSON.stringify({
     "name": "new_project",
@@ -25,29 +18,21 @@ const json = JSON.stringify({
     "license": "ISC"
 });
 
-const callBack = function (err, data) {
-    if (err) console.log(err);
-    else console.log(data);
-};
-const args = process.argv;
-const path = args[2];
+const specImports = (destination) => `const { expect } = require("chai");\nconst {${destination}} = require("../${destination}");\n\ndescribe("${destination}", () => {\nit("is a function", () => {\nexpect(${destination}).to.be.a("function");\n});\n});`;
 
-
-// this function creates my project
-
-// it needs a argument to tell it where to put the file
+const mainImports = (destination) => `const ${destination} = () => {}\nmodule.exports = { ${destination} };`;
 
 // it will be called with node in comand line
-function createProject(destination) {
-    fs.mkdir(destination, function (err, data) {
-        fs.writeFile(destination + '/index.js', '', function (err, data) {
-            fs.writeFile(destination + '/package.json', json, function (err, data) {
-                fs.writeFile(destination + '/.gitignore', 'node_modules', function (err, data) {
-                    fs.mkdir(destination + '/spec', function (err, data) {
-                        fs.writeFile(destination + '/spec/index.spec.js', "const {expect} = require('chai')", function (err) {
-                            // CD into destination
-                            // run npm
-                            // exec('');
+const path = process.argv[2];
+const array = process.argv[2].split('/');
+const destinationName = array[array.length - 1];
+function createProject(destination, destinationName) {
+    fs.mkdir(destination,  (err, data) => {
+        fs.writeFile(destination + `/${destinationName}.js`, mainImports(destinationName),  (err, data) => {
+            fs.writeFile(destination + '/package.json', json,  (err, data) => {
+                fs.writeFile(destination + '/.gitignore', 'node_modules',  (err, data) => {
+                    fs.mkdir(destination + '/spec',  (err, data) => {
+                        fs.writeFile(destination + `/spec/${destinationName}.spec.js`, specImports(destinationName), () => {
                             exec('cd ' + destination + '; npm i');
                         });
                     });
@@ -57,4 +42,4 @@ function createProject(destination) {
     });
 }
 
-createProject(path);
+createProject(path, destinationName);
