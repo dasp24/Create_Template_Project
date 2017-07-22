@@ -11,7 +11,8 @@ const json = JSON.stringify({
     },
     "devDependencies": {
         "chai": "^1.8.1",
-        "eslint": "^3.19.0"
+        "eslint": "^3.19.0",
+        "mocha": "^3.4.2"
     },
     "keywords": [],
     "author": "",
