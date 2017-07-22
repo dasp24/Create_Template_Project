@@ -7,7 +7,7 @@ const json = JSON.stringify({
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "mocha ./spec"
+        "test": "node_modules/.bin/mocha"
     },
     "devDependencies": {
         "chai": "^1.8.1",
