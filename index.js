@@ -1,5 +1,7 @@
 const fs = require('fs');
-const {exec} = require('child_process');
+const {
+    exec
+} = require('child_process');
 
 const json = JSON.stringify({
     "name": "new_project",
@@ -19,9 +21,18 @@ const json = JSON.stringify({
     "license": "ISC"
 });
 
-const specImports = (destination) => `const { expect } = require("chai");\nconst {${destination}} = require("../${destination}");\n\ndescribe("${destination}", () => {\nit("is a function", () => {\nexpect(${destination}).to.be.a("function");\n});\n});`;
+const specImports = (destination) => ['const { expect } = require("chai");',
+    `const {${destination}} = require("../${destination}");`, ,
+    `describe("${destination}", () => {`,
+    'it("is a function", () => {',
+    `expect(${destination}).to.be.a("function");`,
+    '});',
+    '});'
+].join('\n');
 
-const mainImports = (destination) => `const ${destination} = () => {}\nmodule.exports = { ${destination} };`;
+const mainImports = (destination) => [`const ${destination} = () => {};`,
+    `module.exports = { ${destination} };`
+].join('\n');
 
 const forGitIgnore = () => '.node_modules\n**/node_modules\n.DS_Store\n**/.DS_Store\n*.log\n**/*.log\n.vscode\n**/.vscode\n.idea/*\n**/.idea/*\n**/bundle.js\n**/bundle.js.map\n**/*.map.css\n**/*.map.js';
 
@@ -29,12 +40,13 @@ const forGitIgnore = () => '.node_modules\n**/node_modules\n.DS_Store\n**/.DS_St
 const path = process.argv[2];
 const array = process.argv[2].split('/');
 const destinationName = array[array.length - 1];
+
 function createProject(destination, destinationName) {
-    fs.mkdir(destination,  (err, data) => {
-        fs.writeFile(destination + `/${destinationName}.js`, mainImports(destinationName),  (err, data) => {
-            fs.writeFile(destination + '/package.json', json,  (err, data) => {
-                fs.writeFile(destination + '/.gitignore', forGitIgnore(),  (err, data) => {
-                    fs.mkdir(destination + '/spec',  (err, data) => {
+    fs.mkdir(destination, (err, data) => {
+        fs.writeFile(destination + `/${destinationName}.js`, mainImports(destinationName), (err, data) => {
+            fs.writeFile(destination + '/package.json', json, (err, data) => {
+                fs.writeFile(destination + '/.gitignore', forGitIgnore(), (err, data) => {
+                    fs.mkdir(destination + '/spec', (err, data) => {
                         fs.writeFile(destination + `/spec/${destinationName}.spec.js`, specImports(destinationName), () => {
                             exec('cd ' + destination + '; npm i');
                         });
